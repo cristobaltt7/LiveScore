@@ -8,5 +8,5 @@ LiveScore es una aplicaci√≥n web que ofrece resultados deportivos, incluyendo f√
 
 ## Estructura de la base de datos
 
-<img src="">
+<img src="img/bd.png">
 
