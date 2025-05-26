@@ -1,0 +1,21 @@
+:root {
+  --bg-color: #1c1c1c;
+  --sidebar-color: #121212;
+  --text-color: #fff;
+  --secondary-text: #bbb;
+  --accent-color: #00cc33;
+  --card-bg: #1f1f1f;
+  --input-bg: #2e2e2e;
+  --border-color: #333;
+}
+
+.light-mode {
+  --bg-color: #f8f9fa;
+  --sidebar-color: #343a40;
+  --text-color: #212529;
+  --secondary-text: #495057;
+  --accent-color: #28a745;
+  --card-bg: #ffffff;
+  --input-bg: #e9ecef;
+  --border-color: #dee2e6;
+}

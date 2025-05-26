@@ -1,0 +1,128 @@
+/* Estilos principales */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Segoe UI', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.sidebar {
+  background-color: var(--sidebar-color);
+  height: 100vh;
+  padding: 1.5rem 1rem;
+  position: fixed;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+}
+
+.main-content {
+  margin-left: 260px;
+  margin-right: 320px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.news-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100vh;
+  background-color: var(--sidebar-color);
+  padding: 1.5rem 1rem;
+  overflow-y: auto;
+  z-index: 999;
+  transition: all 0.3s ease;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+  border-left: 1px solid var(--border-color);
+}
+
+/* Estilos para los inputs de búsqueda */
+.sidebar input,
+.topbar input {
+  background-color: white !important;
+  color: #000 !important;
+  border: 1px solid #ddd !important;
+}
+
+/* Estilos para las pestañas de fecha */
+.date-tabs-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.date-tabs-wrapper {
+  flex-grow: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.date-tabs-scroll {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 5px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.date-tabs-scroll::-webkit-scrollbar {
+  height: 5px;
+}
+
+.date-tabs-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--accent-color);
+  border-radius: 5px;
+}
+
+.date-tab {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  background-color: var(--input-bg);
+  color: var(--secondary-text);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+  flex-shrink: 0;
+}
+
+.date-tab:hover {
+  border-color: var(--accent-color);
+}
+
+.date-tab.active {
+  background-color: var(--accent-color);
+  color: #fff;
+  font-weight: bold;
+}
+
+.scroll-button {
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.scroll-button:hover {
+  background-color: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
+}
+
+/* Estilos responsive... */
