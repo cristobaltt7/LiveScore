@@ -7,7 +7,7 @@
       
       <a href="/" class="active"><i class="bi bi-house-door"></i> <span>Home</span></a>
       <a href="/football"><i class="bi bi-people"></i> <span>Football</span></a>
-      <a href="/sports"><i class="bi bi-trophy"></i> <span>Sports</span></a>
+      <a href="/liga/resultados"><i class="bi bi-trophy"></i> <span>Results</span></a>
       <a href="/news"><i class="bi bi-newspaper"></i> <span>News</span></a>
       
       <hr class="border-secondary">
