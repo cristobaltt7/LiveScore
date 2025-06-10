@@ -8,6 +8,19 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+
+  <style>
+  .goog-te-banner-frame.skiptranslate,
+  .goog-logo-link,
+  .goog-te-gadget {
+    display: none !important;
+  }
+
+  body {
+    top: 0px !important;
+  }
+</style>
+
 </head>
 <body>
 
@@ -39,17 +52,19 @@
       <div class="logo">
         <img src="/images/logo.png" alt="LiveScore Logo">
       </div>
-      <input type="text" class="form-control form-control-sm" placeholder="🔍 Search...">
+<input type="text" class="form-control form-control-sm" placeholder="🔍 Search..." id="sidebarSearchInput">
       
       <a href="#" class="active"><i class="bi bi-house-door"></i> <span>Home</span></a>
       <a href="/football"><i class="bi bi-people"></i> <span>Football</span></a>
-      <a href="/sports"><i class="bi bi-trophy"></i> <span>Sports</span></a>
-      <a href="/news"><i class="bi bi-newspaper"></i> <span>News</span></a>
+      <a href="/liga/resultados"><i class="bi bi-trophy"></i> <span>Results</span></a>
+      <a href="/noticias"><i class="bi bi-newspaper"></i> <span>Noticias</span></a>
       
       <hr class="border-secondary">
       
-      <a href="#"><i class="bi bi-heart"></i> <span>Followed Team</span></a>
-      <a href="#"><i class="bi bi-person"></i> <span>Followed Players</span></a>
+      <a href="/followed-team"><i class="bi bi-heart"></i> <span>Followed Team</span></a>
+<a href="{{ route('player-statistics.index') }}">
+    <i class="bi bi-person"></i> <span>Players statistics</span>
+</a>
           
       <div class="theme-settings">
         <h6><i class="bi bi-palette"></i> <span>Theme Settings</span></h6>
@@ -61,11 +76,15 @@
       
       <div class="setting-item">
         <label><i class="bi bi-translate"></i> Language</label>
-        <select class="form-select form-select-sm" style="width: 100px;">
-          <option>English</option>
-          <option>Español</option>
-          <option>Français</option>
-        </select>
+<select class="form-select form-select-sm" style="width: 100px;" onchange="doTranslate(this)">
+  <option value="es">Español</option>
+  <option value="en">English</option>
+  <option value="fr">Français</option>
+  <option value="de">Deutsch</option>
+  <option value="it">Italiano</option>
+  <option value="pt">Português</option>
+</select>
+
       </div>
     </div>
     
@@ -236,68 +255,15 @@
     </div>
   </div>
 
-  <div class="news-sidebar">
-    <h5 class="mb-4">
-      <a href="/news" class="text-decoration-none text-white d-flex align-items-center">
-        <i class="bi bi-fire"></i> Trending News <i class="bi bi-arrow-right ms-auto"></i>
-      </a>
-    </h5>
-    
-    <div class="news-item">
-      <img src="https://via.placeholder.com/80x80/333/fff?text=PL" alt="News 1">
-      <div class="news-item-content">
-        <h6><i class="bi bi-trophy"></i> Premier League Results</h6>
-        <p>Manchester City defeats Arsenal 3-1 in crucial title clash</p>
-        <small><i class="bi bi-clock"></i> 2 hours ago • <i class="bi bi-eye"></i> 1,245 views</small>
-      </div>
+<div class="news-sidebar">
+  <h5 class="mb-4">
+    <a href="/noticias" class="text-decoration-none text-white d-flex align-items-center">
+      <i class="bi bi-fire"></i> Trending News <i class="bi bi-arrow-right ms-auto"></i>
+    </a>
+  </h5>
+      @include('layouts.news-sidebar')
     </div>
     
-    <div class="news-item">
-      <img src="https://via.placeholder.com/80x80/333/fff?text=UCL" alt="News 2">
-      <div class="news-item-content">
-        <h6><i class="bi bi-stars"></i> Champions League</h6>
-        <p>Real Madrid advances to semifinals after dramatic comeback</p>
-        <small><i class="bi bi-clock"></i> 5 hours ago • <i class="bi bi-eye"></i> 1,245 views</small>
-      </div>
-    </div>
-    
-
-    <div class="news-item">
-      <img src="https://via.placeholder.com/80x80/333/fff?text=NBA" alt="News 3">
-      <div class="news-item-content">
-        <h6><i class="bi bi-basket"></i> NBA Playoffs</h6>
-        <p>Lakers take 2-0 lead in series against Warriors</p>
-        <small><i class="bi bi-clock"></i> 8 hours ago • <i class="bi bi-eye"></i> 1,245 views</small>
-      </div>
-    </div>
-    
-    <div class="news-item">
-      <img src="https://via.placeholder.com/80x80/333/fff?text=TR" alt="News 4">
-      <div class="news-item-content">
-        <h6><i class="bi bi-arrow-left-right"></i> Transfer News</h6>
-        <p>Mbappé reportedly agrees terms with Real Madrid</p>
-        <small><i class="bi bi-clock"></i> 12 hours ago • <i class="bi bi-eye"></i> 1,245 views</small>
-      </div>
-    </div>
-    
-    <div class="news-item">
-      <img src="https://via.placeholder.com/80x80/333/fff?text=INJ" alt="News 5">
-      <div class="news-item-content">
-        <h6><i class="bi bi-heart-pulse"></i> Injury Update</h6>
-        <p>Neymar out for season with ankle injury</p>
-        <small><i class="bi bi-clock"></i> 1 day ago • <i class="bi bi-eye"></i> 1,245 views</small>
-      </div>
-    </div>
-    
-    <div class="news-item">
-      <img src="https://via.placeholder.com/80x80/333/fff?text=WC" alt="News 6">
-      <div class="news-item-content">
-        <h6><i class="bi bi-globe"></i> World Cup 2026</h6>
-        <p>Host cities announced for North American tournament</p>
-        <small><i class="bi bi-clock"></i> 1 day ago • <i class="bi bi-eye"></i> 1,245 views</small>
-      </div>
-    </div>
-  </div>
 
   <footer class="footer bg-dark text-white py-4">
     <div class="container-fluid">
@@ -364,5 +330,104 @@
   <script src="{{ asset('js/futbol.js') }}"></script>
   <script src="{{ asset('js/tabs.js') }}"></script>
   <script src="{{ asset('js/profile.js') }}"></script>
+
+  <!-- Google Translate container oculto -->
+<div id="google_translate_element" style="display: none;"></div>
+
+<!-- Cargar el script de Google Translate -->
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'es',
+      includedLanguages: 'en,es,fr,de,it,pt',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    }, 'google_translate_element');
+  }
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<!-- Función para activar idioma desde el select -->
+<script>
+  function doTranslate(select) {
+    const lang = select.value;
+
+    const tryTranslate = () => {
+      const iframe = document.querySelector('iframe.goog-te-menu-frame');
+
+      if (!iframe) {
+        setTimeout(tryTranslate, 200); // Reintenta hasta que aparezca el iframe
+        return;
+      }
+
+      let innerDoc;
+      try {
+        innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+      } catch (e) {
+        alert("No se puede acceder al contenido del traductor (seguridad del navegador).");
+        return;
+      }
+
+      const options = innerDoc.querySelectorAll('.goog-te-menu2-item span.text');
+
+      let found = false;
+      options.forEach(el => {
+        if (el.innerText.toLowerCase().includes(lang.toLowerCase())) {
+          el.click();
+          found = true;
+        }
+      });
+
+      if (!found) {
+        alert("No se encontró el idioma. Intenta de nuevo.");
+      }
+    };
+
+    // Esperar 1 segundo por si el iframe aún no se ha cargado del todo
+    setTimeout(tryTranslate, 1000);
+  }
+</script>
+
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'es',
+      includedLanguages: 'en,es,fr,de,it,pt',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    }, 'google_translate_element');
+  }
+</script>
+
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const input = document.getElementById('sidebarSearchInput');
+
+    input.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+
+            const value = input.value.trim().toLowerCase();
+
+            if (value.includes('football')) {
+                window.location.href = '/football';
+            } else if (value.includes('result') || value.includes('liga')) {
+                window.location.href = '/liga/resultados';
+            } else if (value.includes('noticia') || value.includes('news')) {
+                window.location.href = '/noticias';
+            } else if (value.includes('followed')) {
+                window.location.href = '/followed-team';
+            } else if (value.includes('player') || value.includes('statistic')) {
+                window.location.href = '{{ route('player-statistics.index') }}';
+            } else if (value === 'home') {
+                window.location.href = '/';
+            } else {
+                alert('No se encontró ninguna sección con ese nombre.');
+            }
+        }
+    });
+});
+</script>
+
 </body>
 </html>

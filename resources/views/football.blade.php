@@ -20,14 +20,9 @@
     <!-- Equipo seleccionado -->
     <div class="selected-team-container" id="selectedTeamContainer" style="display: none;">
       <div class="card bg-secondary border-0 text-white mb-4">
-        <div class="card-header bg-primary d-flex align-items-center justify-content-between">
-          <div class="d-flex align-items-center">
-            <img id="teamLogo" src="" alt="Escudo" class="me-3 team-logo" style="height: 50px;">
-            <h3 id="teamName" class="mb-0"></h3>
-          </div>
-          <button id="favoriteBtn" class="btn btn-outline-light">
-            <i class="bi bi-heart"></i> <span id="favoriteText">Añadir a favoritos</span>
-          </button>
+        <div class="card-header bg-primary d-flex align-items-center">
+          <img id="teamLogo" src="" alt="Escudo" class="me-3 team-logo" style="height: 50px;">
+          <h3 id="teamName" class="mb-0"></h3>
         </div>
         <div class="card-body">
           <div class="row">
@@ -38,10 +33,6 @@
                 <li><strong>Fundado:</strong> <span id="teamFounded"></span></li>
                 <li><strong>Estadio:</strong> <span id="teamStadium"></span></li>
               </ul>
-              <div class="col-md-6 mb-3">
-              <h5 class="border-bottom pb-1  w-100">Plantilla</h5>
-              <div class="stats-grid row" id="teamStats"></div>
-            </div>
             </div>
           </div>
         </div>
@@ -49,9 +40,11 @@
 
       <!-- Tabla completa de la plantilla -->
       <div id="fullSquadContainer" class="mb-5"></div>
-<!-- Crea tu once -->
-<h5 class="border-bottom pb-1 w-100 text-white">Crea tu once</h5>
-<div id="customLineupContainer" class="mb-4"></div>
+
+      <!-- Crea tu once -->
+      <h5 class="border-bottom pb-1 w-100 text-white">Crea tu once</h5>
+      <div id="customLineupContainer" class="mb-4"></div>
+
       <!-- Selector editable del once (debajo de tabla) -->
       <div id="lineupSelector" class="mb-4"></div>
 
@@ -70,16 +63,40 @@
     <div class="popular-teams" id="popularTeams">
       <h3 class="text-white mb-3">Equipos de La Liga</h3>
       <div class="row row-cols-2 row-cols-md-4 g-3">
-        @foreach($teams as $team)
-          <div class="col">
-            <div class="team-card bg-secondary text-center p-3 rounded shadow-sm h-100"
-                 data-team-id="{{ $team['id'] }}"
-                 data-club-id="{{ $team['club_id'] ?? '' }}">
-              <img src="{{ $team['crest'] }}" alt="{{ $team['name'] }}" class="team-logo mb-2" style="height: 60px;">
-              <h6 class="text-white mb-0">{{ $team['name'] }}</h6>
-            </div>
-          </div>
-        @endforeach
+@foreach($teams as $team)
+
+@php $isFav = in_array($team['id'], $favoritos); @endphp
+
+
+<div class="col">
+  <div class="team-card bg-secondary text-center p-3 rounded shadow-sm h-100 position-relative"
+       data-team-id="{{ $team['id'] }}"
+       data-club-id="{{ $team['club_id'] ?? '' }}"
+       data-football-id="{{ $team['id'] }}"
+       data-transfermarkt-id="{{ $team['club_id'] ?? '' }}"
+       data-team-name="{{ $team['name'] }}"
+       data-team-logo="{{ $team['crest'] }}">
+       
+    <!-- Ícono de corazón (favorito) -->
+<i class="favorite-icon position-absolute top-0 end-0 m-2 
+   {{ $isFav ? 'bi-heart-fill text-danger' : 'bi-heart text-white' }}"
+   style="cursor: pointer; font-size: 1.3rem;"
+   data-favorite="{{ $isFav ? '1' : '0' }}"
+   data-team-id="{{ $team['id'] }}"
+   data-transfermarkt-id="{{ $team['club_id'] ?? '' }}"
+   data-team-name="{{ $team['name'] }}"
+   data-team-logo="{{ $team['crest'] }}">
+</i>
+
+
+
+    <img src="{{ $team['crest'] }}" alt="{{ $team['name'] }}" class="team-logo mb-2" style="height: 60px;">
+    <h6 class="text-white mb-0">{{ $team['name'] }}</h6>
+  </div>
+</div>
+@endforeach
+
+
       </div>
     </div>
   </div>
@@ -87,6 +104,12 @@
 @endsection
 
 @section('scripts')
+@if (session('scrollToTeamId'))
+<script>
+    localStorage.setItem('scrollToTeamId', '{{ session('scrollToTeamId') }}');
+</script>
+@endif
+
 <script src="{{ asset('js/football.js') }}"></script>
 <script src="{{ asset('js/teamSquad.js') }}"></script>
 <script>
@@ -98,5 +121,24 @@ function volverALista() {
     document.getElementById('fullSquadContainer').innerHTML = '';
     document.getElementById('lineupSelector').innerHTML = '';
 }
+
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('teamSearch');
+    const teamCards = document.querySelectorAll('.team-card');
+
+    searchInput.addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+
+        teamCards.forEach(card => {
+            const name = card.dataset.teamName.toLowerCase();
+            const visible = name.includes(query);
+            card.parentElement.style.display = visible ? 'block' : 'none';
+        });
+    });
+});
+</script>
+
 @endsection

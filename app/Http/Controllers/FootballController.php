@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Squad;
-
+use App\Models\FavoriteTeam;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
@@ -118,84 +118,63 @@ class FootballController extends Controller
 }
 
 
+  public function index()
+    {
+        try {
+            $apiToken = env('FOOTBALL_DATA_API_TOKEN');
 
-public function toggleFavorite(Request $request)
-{
-    $user = auth()->user();
-    $favorites = $user->favorite_teams ?? [];
+            $response = Http::withHeaders([
+                'X-Auth-Token' => $apiToken
+            ])->get("https://api.football-data.org/v4/competitions/PD/teams");
 
-    $id = $request->input('team_id');
-    $name = $request->input('team_name');
-    $logo = $request->input('team_logo');
+            if ($response->failed()) {
+                throw new \Exception('Error al cargar equipos');
+            }
 
-    if (!$id || !$name || !$logo) return response()->json(['success' => false]);
+            $teams = $response->json()['teams'] ?? [];
 
-    if (isset($favorites[$id])) {
-        unset($favorites[$id]);
-    } else {
-        $favorites[$id] = ['name' => $name, 'logo' => $logo];
-    }
+            $clubIdMap = [
+                81 => 131,     // FC Barcelona
+                86 => 418,     // Real Madrid
+                78 => 13,      // Atlético de Madrid
+                559 => 368,    // Sevilla FC
+                92 => 681,     // Real Sociedad
+                95 => 1049,    // Valencia CF
+                94 => 1050,    // Villarreal CF
+                90 => 150,     // Real Betis
+                77 => 621,     // Athletic Club
+                82 => 3709,    // Getafe CF
+                298 => 12321,  // Girona FC
+                87 => 367,     // Rayo Vallecano
+                250 => 366,    // Real Valladolid
+                745 => 1244,   // CD Leganés
+                275 => 472,    // UD Las Palmas
+                89 => 237,     // RCD Mallorca
+                80 => 714,     // RCD Espanyol
+                263 => 1108,   // Deportivo Alavés
+                558 => 940,    // Celta de Vigo
+                79 => 331      // Osasuna
+            ];
 
-    $user->favorite_teams = $favorites;
-    $user->save();
+            foreach ($teams as &$team) {
+                $team['club_id'] = $clubIdMap[$team['id']] ?? null;
+            }
+$favoritos = array_keys(json_decode(auth()->user()->favorite_teams ?? '{}', true));
 
-    return response()->json(['success' => true, 'favorites' => $favorites]);
-}
 
-public function index()
-{
-    try {
-        $apiToken = env('FOOTBALL_DATA_API_TOKEN');
+return view('football', [
+    'teams' => $teams,
+    'favoritos' => $favoritos
+]);
 
-        $response = Http::withHeaders([
-            'X-Auth-Token' => $apiToken
-        ])->get("https://api.football-data.org/v4/competitions/PD/teams");
 
-        if ($response->failed()) {
-            throw new \Exception('Error al cargar equipos');
+        } catch (\Exception $e) {
+            return view('football', [
+                'teams' => [],
+                'error' => $e->getMessage()
+            ]);
         }
-
-        $teams = $response->json()['teams'] ?? [];
-
-        // 🟩 Mapeo: Football-Data ID => Transfermarkt club_id
-        $clubIdMap = [
-            81 => 131,     // FC Barcelona
-            86 => 418,     // Real Madrid
-            78 => 13,    // Atlético de Madrid
-            559 => 368,     // Sevilla FC
-            92 => 681,    // Real Sociedad
-            95 => 1049,    // Valencia CF
-            94 => 1050,    // Villarreal CF
-            90 => 150,     // Real Betis
-            77 => 621,    // Athletic Club
-            82 => 3709,     // Getafe CF
-            298 => 12321,   // Girona FC
-            87 => 367,   // Rayo Vallecano
-            250 => 366,   // Real Valladolid
-            745 => 1244,  // CD Leganés
-            275 => 472,   // UD Las Palmas
-            89 => 237,   // RCD Mallorca
-            80 => 714,  // RCD Espanyol
-            263 => 1108,   // Deportivo Alavés
-            558 => 940,   // Celta de Vigo
-            79 => 331     // Osasuna
-        ];
-
-        // 🟩 Añadir club_id a cada equipo
-        foreach ($teams as &$team) {
-            $team['club_id'] = $clubIdMap[$team['id']] ?? null;
-        }
-
-        return view('football', [
-            'teams' => $teams
-        ]);
-    } catch (\Exception $e) {
-        return view('football', [
-            'teams' => [],
-            'error' => $e->getMessage()
-        ]);
     }
-}
 
 
 
@@ -225,31 +204,45 @@ public function getSquad($id)
 
 public function teamDetails($id)
 {
-    $response = Http::withHeaders([
-        'X-Auth-Token' => env('FOOTBALL_DATA_API_TOKEN')
-    ])->get("https://api.football-data.org/v4/teams/{$id}");
+    // Mapeo Football-Data ID => Transfermarkt club_id
+    $clubIdMap = [
+        81 => 131, 86 => 418, 78 => 13, 559 => 368, 92 => 681,
+        95 => 1049, 94 => 1050, 90 => 150, 77 => 621, 82 => 3709,
+        298 => 12321, 87 => 367, 250 => 366, 745 => 1244, 275 => 472,
+        89 => 237, 80 => 714, 263 => 1108, 558 => 940, 79 => 331
+    ];
+
+    $clubId = $clubIdMap[$id] ?? null;
+
+    if (!$clubId) {
+        return response()->json(['error' => 'Club ID no mapeado'], 404);
+    }
+
+    $response = Http::get("https://transfermarkt-api.fly.dev/clubs/{$clubId}/profile");
 
     if ($response->failed()) {
-        return response()->json(['error' => 'No se pudo obtener el equipo'], 404);
+        return response()->json(['error' => 'No se pudo obtener el perfil del club'], 500);
     }
 
     $data = $response->json();
 
     return response()->json([
         'team' => [
-            'id' => $data['id'],
-            'name' => $data['name'],
-            'logo' => $data['crest'],
-            'country' => $data['area']['name'] ?? 'Unknown',
-            'founded' => $data['founded'] ?? null
+            'id' => $id,
+            'name' => $data['name'] ?? 'Desconocido',
+            'logo' => $data['image'] ?? '',
+            'country' => $data['addressLine3'] ?? 'Desconocido',
+            'founded' => isset($data['foundedOn']) ? substr($data['foundedOn'], 0, 4) : 'Desconocido'
         ],
         'venue' => [
-            'name' => $data['venue'] ?? 'Unknown',
-            'capacity' => 0 // La API no lo da
+            'name' => $data['stadiumName'] ?? 'Desconocido',
+            'capacity' => $data['stadiumSeats'] ?? 0
         ],
-        'statistics' => null // Puedes dejarlo así por ahora
+        'statistics' => null
     ]);
 }
+
+
 
 public function getTeamSquad($teamId)
 {
@@ -325,7 +318,7 @@ public function resultados(Request $request)
     $apiToken = env('FOOTBALL_DATA_API_TOKEN');
     $jornada = $request->query('jornada'); // ej: 1, 2, 3...
 
-    // Resultados
+    // Obtener resultados de partidos
     $matchesUrl = "https://api.football-data.org/v4/competitions/PD/matches";
     if ($jornada) {
         $matchesUrl .= "?matchday=$jornada";
@@ -335,17 +328,11 @@ public function resultados(Request $request)
         'X-Auth-Token' => $apiToken
     ])->get($matchesUrl);
 
-    if ($matchesResponse->failed()) {
-        return view('liga.resultados', [
-            'matches' => [],
-            'standings' => [],
-            'error' => 'Error al obtener resultados'
-        ]);
-    }
+    $matches = $matchesResponse->successful()
+        ? ($matchesResponse->json()['matches'] ?? [])
+        : [];
 
-    $matches = $matchesResponse->json()['matches'] ?? [];
-
-    // Clasificación
+    // Obtener clasificación
     $standingsResponse = Http::withHeaders([
         'X-Auth-Token' => $apiToken
     ])->get("https://api.football-data.org/v4/competitions/PD/standings");
@@ -354,7 +341,32 @@ public function resultados(Request $request)
         ? ($standingsResponse->json()['standings'][0]['table'] ?? [])
         : [];
 
-    return view('liga.resultados', compact('matches', 'standings', 'jornada'));
+    // Obtener máximos goleadores (scorers)
+    $scorersResponse = Http::withHeaders([
+        'X-Auth-Token' => $apiToken
+    ])->get("https://api.football-data.org/v4/competitions/PD/scorers");
+
+    $scorers = $scorersResponse->successful()
+        ? ($scorersResponse->json()['scorers'] ?? [])
+        : [];
+
+    return view('liga.resultados', compact('matches', 'standings', 'jornada', 'scorers'));
 }
+
+
+public function verClub($id)
+{
+    $url = "https://transfermarkt-api.fly.dev/clubs/{$id}/profile";
+
+    $response = Http::get($url);
+
+    if ($response->successful()) {
+        $data = $response->json();
+        return view('club-info', ['data' => $data]);
+    }
+
+    return redirect()->route('favorites')->with('error', 'No se pudo cargar la información del club.');
+}
+
 
 }

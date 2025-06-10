@@ -32,8 +32,14 @@
     @endforelse
 
     <h4 class="text-success mt-5">Clasificación actual</h4>
+    <div class="mb-3">
+        <button class="btn btn-outline-light btn-sm" onclick="filtrarTabla('all')">Todos</button>
+        <button class="btn btn-outline-light btn-sm" onclick="filtrarTabla('home')">Solo Local</button>
+        <button class="btn btn-outline-light btn-sm" onclick="filtrarTabla('away')">Solo Visitante</button>
+    </div>
+
     <div class="table-responsive">
-        <table class="table table-striped table-dark table-bordered">
+        <table class="table table-striped table-dark table-bordered" id="tabla-clasificacion">
             <thead>
                 <tr>
                     <th>Pos</th>
@@ -45,11 +51,12 @@
                     <th>P</th>
                     <th>GF</th>
                     <th>GC</th>
+                    <th class="filtro">Tipo</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($standings as $team)
-                    <tr>
+                    <tr data-type="{{ $team['homeAway'] ?? 'all' }}">
                         <td>{{ $team['position'] }}</td>
                         <td>{{ $team['team']['name'] }}</td>
                         <td>{{ $team['points'] }}</td>
@@ -59,10 +66,35 @@
                         <td>{{ $team['lost'] }}</td>
                         <td>{{ $team['goalsFor'] }}</td>
                         <td>{{ $team['goalsAgainst'] }}</td>
+                        <td class="filtro">{{ $team['homeAway'] ?? 'N/A' }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
+
+    <h4 class="text-success mt-5">⚽ Máximos Goleadores</h4>
+    <ul>
+        @forelse($scorers as $scorer)
+            <li>
+                {{ $scorer['player']['name'] }} ({{ $scorer['team']['name'] }}) - {{ $scorer['goals'] }} goles
+            </li>
+        @empty
+            <p>No hay datos de goleadores disponibles.</p>
+        @endforelse
+    </ul>
 </div>
+
+<script>
+function filtrarTabla(tipo) {
+    const rows = document.querySelectorAll('#tabla-clasificacion tbody tr');
+    rows.forEach(row => {
+        if (tipo === 'all' || row.dataset.type === tipo) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+</script>
 @endsection

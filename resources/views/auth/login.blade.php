@@ -10,6 +10,12 @@
   />
 </head>
 <body>
+  @if(session('status') === 'account-deleted')
+    <div class="alert alert-info">
+        Tu cuenta ha sido eliminada exitosamente.
+    </div>
+@endif
+
   <div
     class="container d-flex justify-content-center align-items-center login-container"
   >
