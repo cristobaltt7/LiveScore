@@ -57,4 +57,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!valid) event.preventDefault();
   });
+  // Mostrar mensaje de error si Laravel devolvió error desde backend
+const backendError = document.querySelector('[data-login-error]');
+if (backendError) {
+  const passwordInput = form.querySelector('input[name="password"]');
+  showError(passwordInput, backendError.dataset.loginError);
+}
+
 });

@@ -33,59 +33,80 @@
       </div>
       @endif
 
-      <form method="POST" action="{{ route('register') }}">
-        @csrf
+     <form method="POST" action="{{ route('register') }}">
+  @csrf
 
-        <div class="mb-3">
-          <input
-            type="text"
-            name="name"
-            class="form-control"
-            placeholder="Enter Your Username"
-            required
-          />
-        </div>
+  <div class="mb-3">
+    <input
+      type="text"
+      name="name"
+      class="form-control"
+      placeholder="Enter Your Username"
+      required
+    />
+  </div>
 
-        <div class="mb-3">
-          <input
-            type="email"
-            name="email"
-            class="form-control"
-            placeholder="Enter Your Email"
-            required
-          />
-        </div>
+  <div class="mb-3">
+    <input
+      type="email"
+      name="email"
+      class="form-control"
+      placeholder="Enter Your Email"
+      required
+    />
+  </div>
 
-        <div class="mb-3 position-relative">
-          <input
-            type="password"
-            name="password"
-            class="form-control"
-            placeholder="Enter Your Password"
-            required
-          />
-          <span class="form-icon"><i class="fa fa-eye-slash"></i></span>
-        </div>
+  <div class="mb-3 position-relative">
+    <input
+      type="password"
+      name="password"
+      class="form-control"
+      placeholder="Enter Your Password"
+      required
+    />
+    <span class="form-icon"><i class="fa fa-eye-slash"></i></span>
+  </div>
 
-        <div class="mb-3">
-          <input
-            type="password"
-            name="password_confirmation"
-            class="form-control"
-            placeholder="Confirm Your Password"
-            required
-          />
-        </div>
+  <div class="mb-3">
+    <input
+      type="password"
+      name="password_confirmation"
+      class="form-control"
+      placeholder="Confirm Your Password"
+      required
+    />
+  </div>
 
-        <button type="submit" class="btn btn-signup w-100 text-white">
-          Signup
-        </button>
+  <!-- Pregunta secreta -->
+  <div class="mb-3">
+    <select name="secret_question" class="form-control" required>
+      <option value="">Selecciona una pregunta secreta</option>
+      <option value="mascota">¿Cómo se llama tu primera mascota?</option>
+      <option value="comida">¿Cuál es tu comida favorita?</option>
+      <option value="ciudad">¿En qué ciudad naciste?</option>
+    </select>
+  </div>
 
-        <div class="text-center mt-3">
-          Already have an account?
-          <a href="{{ route('login') }}" class="text-link">Login</a>
-        </div>
-      </form>
+  <div class="mb-3">
+    <input
+      type="text"
+      name="secret_answer"
+      class="form-control"
+      placeholder="Tu respuesta secreta"
+      required
+    />
+  </div>
+
+  <button type="submit" class="btn btn-signup w-100 text-white">
+    Signup
+  </button>
+
+  <div class="text-center mt-3">
+    Already have an account?
+    <a href="{{ route('login') }}" class="text-link">Login</a>
+  </div>
+</form>
+
     </div>
   </div>
 

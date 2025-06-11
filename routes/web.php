@@ -10,9 +10,11 @@ use App\Http\Controllers\FavoriteTeamController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\AdminUserController;
 
 
-
+Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.forgot');
+Route::post('/forgot-password', [AuthController::class, 'verifySecretAnswer'])->name('password.verify');
 
 
 Route::get('/', [FootballController::class, 'home'])->name('home');
@@ -24,8 +26,11 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect('/');
+})->name('logout');
+
 Route::get('/settings', function () {
     return view('settings');
 })->name('settings');
@@ -41,6 +46,19 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+
+});
+
+Route::middleware(['auth', 'is_admin'])->group(function () {
+    Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users');
+    Route::get('/admin/users/{user}', [AdminUserController::class, 'show'])->name('admin.users.show');
+    Route::put('/admin/users/{user}', [AdminUserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/admin/users/{user}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
+    Route::put('/admin/users/{user}/password', [AdminUserController::class, 'changePassword'])->name('admin.users.changePassword');
+    Route::delete('/admin/users/{user}/remove-favorite', [AdminUserController::class, 'removeFavorite'])->name('admin.users.removeFavorite');
+    Route::put('/admin/users/{user}/update-profile', [AdminUserController::class, 'updateProfile'])->name('admin.users.updateProfile');
+    Route::delete('/admin/users/{user}/favorites/{teamId}', [AdminUserController::class, 'removeFavorite'])
+     ->name('admin.users.removeFavorite');
 
 });
 
