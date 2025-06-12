@@ -1,6 +1,4 @@
-
-
-/* Layout Structure */
+/* Estructura del diseño */
 .main-container {
   display: flex;
   flex-direction: column;
@@ -9,10 +7,10 @@
 
 .main-content {
   flex: 1;
-  margin-left: 250px; /* Ancho del sidebar */
-  margin-right: 300px; /* Ancho del news-sidebar */
+  margin-left: 250px;
+  margin-right: 300px;
   padding: 20px;
-  max-width: 1200px; /* Ancho máximo del contenido central */
+  max-width: 1200px; 
   width: 100%;
   margin: 0 auto;
   padding-top: 20px;
@@ -36,7 +34,7 @@
   padding: 2rem 0;
   border-top: 1px solid var(--border-color);
   position: relative;
-  z-index: 1; /* ⚠️ BAJAMOS el z-index para que los sidebars estén por encima */
+  z-index: 1;
 }
 
 .custom-footer {
@@ -52,6 +50,18 @@
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
+.hover-glow:hover {
+  box-shadow: 0 0 10px rgba(0,255,0,0.6);
+  transition: box-shadow 0.3s ease;
+}
+
+.team-logo {
+  transition: transform 0.3s ease;
+}
+.team-logo:hover {
+  transform: scale(1.1);
+}
+
 
 /* Ajustes para el sidebar y news-sidebar */
 .sidebar,
@@ -60,7 +70,7 @@
   top: 0;
   height: 100vh;
   overflow-y: auto;
-  z-index: 10; /* MÁS ALTO que el footer */
+  z-index: 10;
 }
 
 
@@ -114,18 +124,168 @@
   --search-text: #212529;
 }
 
-.light-mode {
-  --bg-color: #f8f9fa;
-  --sidebar-color: #343a40;
-  --text-color: #212529;
-  --secondary-text: #495057;
-  --accent-color: #28a745;
-  --card-bg: #ffffff;
-  --input-bg: #e9ecef;
-  --border-color: #dee2e6;
-  --search-bg: #ffffff;
-  --search-text: #212529;
+body.light-mode {
+    background-color: #f8f9fa;
+    color: #212529;
 }
+
+body.light-mode .bg-dark {
+    background-color: #ffffff !important;
+}
+
+body.light-mode .text-white {
+    color: #212529 !important;
+}
+
+body.light-mode .bg-secondary {
+    background-color: #dee2e6 !important;
+}
+
+body.light-mode .table-dark {
+    background-color: #ffffff !important;
+    color: #212529 !important;
+}
+
+body.light-mode .table-dark th,
+body.light-mode .table-dark td {
+    background-color: #ffffff !important;
+    color: #212529 !important;
+}
+
+body.light-mode .btn-outline-light {
+    border-color: #000 !important;
+    color: #000 !important;
+}
+
+body.light-mode .btn-outline-light:hover {
+    background-color: #000 !important;
+    color: #fff !important;
+}
+
+body.light-mode .text-white {
+    color: #000 !important;
+}
+
+body.light-mode .section-title, 
+body.light-mode .match-date,
+body.light-mode .scorer-team,
+body.light-mode h2,
+body.light-mode h3,
+body.light-mode h5 {
+    color: #000 !important;
+}
+
+/* Estilo por defecto del botón del home */
+.btn-home {
+    border: 1px solid white;
+    color: white;
+}
+
+/* Estilo del botón en hover */
+.btn-home:hover {
+    background-color: white;
+    color: black;
+}
+
+/* En modo claro, cambia borde y texto a negro */
+body.light-mode .btn-home {
+    border-color: black !important;
+    color: black !important;
+}
+
+body.light-mode .btn-home:hover {
+    background-color: black !important;
+    color: white !important;
+}
+
+.sidebar-title {
+    color: white !important;
+}
+body.light-mode .sidebar-title {
+    color: white !important;
+}
+
+/* Texto general claro en modo light */
+body.light-mode .bg-secondary,
+body.light-mode .text-white,
+body.light-mode .text-light {
+    color: black !important;
+}
+
+/* Los títulos */
+body.light-mode h2,
+body.light-mode h4,
+body.light-mode .text-success {
+    color: black !important;
+}
+
+/* Cambia el color de <small> en fechas y goleadores */
+body.light-mode small,
+body.light-mode .text-light {
+    color: #333 !important;
+}
+
+/* Tema claro */
+body.light .theme-list .list-group-item {
+    background-color: #ffffff;
+    color: #000000;
+    border-color: #dee2e6;
+}
+
+/* Tema oscuro */
+body.dark .theme-list .list-group-item {
+    background-color: #212529;
+    color: #ffffff;
+    border-color: #444;
+}
+
+/* Cuadro de info adaptable a modo */
+/* Estilo para el modo oscuro */
+body.dark .club-info-box .list-group-item {
+    background-color: #1c1c1c !important;
+    color: #ffffff !important;
+    border-color: #444 !important;
+}
+
+/* Estilo para el modo claro */
+body.light .club-info-box .list-group-item {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-color: #dee2e6 !important;
+}
+
+.fixed-sidebar {
+    background-color: #000 !important;
+    color: #fff !important;
+}
+
+.fixed-sidebar a {
+    color: #fff !important;
+}
+
+.fixed-sidebar .btn {
+    background-color: transparent !important;
+    color: #fff !important;
+    border: 1px solid #fff !important;
+}
+
+.fixed-sidebar .btn:hover {
+    background-color: #fff !important;
+    color: #000 !important;
+}
+
+
+/* El título también adaptado */
+body.light .container h2,
+body.light .container h5 {
+    color: #000;
+}
+
+body.dark .container h2,
+body.dark .container h5 {
+    color: #fff;
+}
+
 
 /* ===== Base Styles ===== */
 body {
@@ -676,6 +836,35 @@ body {
   transform: translateY(-3px);
 }
 
+/* Desktop: mantiene espacio para sidebar y news-sidebar */
+.main-content {
+  margin-left: 250px;
+  margin-right: 300px;
+  padding: 20px;
+}
+
+/* Tablet: oculta news-sidebar y reduce margen izquierdo */
+@media (max-width: 1200px) {
+  .main-content {
+    margin-left: 250px;
+    margin-right: 0;
+  }
+}
+
+/* Móviles grandes: sidebar en versión compacta */
+@media (max-width: 992px) {
+  .main-content {
+    margin-left: 70px;
+  }
+}
+
+/* Móviles pequeños: sidebar abajo como menú horizontal */
+@media (max-width: 576px) {
+  .main-content {
+    margin: 0;
+    padding: 1rem;
+  }
+}
 
 
 @media (max-width: 992px) {
@@ -683,7 +872,6 @@ body {
     padding-bottom: 0;
   }
   
-
 }
 
 /* Estilo para los resultados cuadrados en línea */
@@ -1576,18 +1764,6 @@ body {
   --search-text: #212529;
 }
 
-.light-mode {
-  --bg-color: #f8f9fa;
-  --sidebar-color: #343a40;
-  --text-color: #212529;
-  --secondary-text: #495057;
-  --accent-color: #28a745;
-  --card-bg: #ffffff;
-  --input-bg: #e9ecef;
-  --border-color: #dee2e6;
-  --search-bg: #ffffff;
-  --search-text: #212529;
-}
 
 /* ===== Base Styles ===== */
 body {
@@ -2251,6 +2427,7 @@ body {
   min-width: 50px;
 }
 
+
 .player-marker .player-name {
   margin-top: 4px;
   font-size: 0.8rem;
@@ -2346,32 +2523,170 @@ body {
   transform: scale(1.02);
 }
 
+/* RESPONSIVE DESKTOP - ancho completo */
+@media (min-width: 1201px) {
+  .sidebar {
+    width: 260px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+  }
 
+  .news-sidebar {
+    display: block;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 300px;
+    height: 100vh;
+  }
+
+  .main-content {
+    margin-left: 260px;
+    margin-right: 300px;
+    padding: 2rem;
+  }
+}
+
+
+/* RESPONSIVE TABLET - sidebar compacto y main bien centrado */
+@media (max-width: 1200px) {
+  .sidebar {
+    width: 80px;
+  }
+
+  /* Oculta elementos secundarios para compactar el sidebar */
+  .sidebar a span,
+  .sidebar .logo span,
+  .sidebar .profile .name,
+  .sidebar .profile small,
+  .sidebar input,
+  .theme-buttons .theme-btn span {
+    display: none !important;
+  }
+
+  .news-sidebar {
+    display: none !important;
+  }
+
+    /* Ocultar logo en tablet */
+  .sidebar .logo {
+    display: none !important;
+  }
+
+  /* Alineación y centrado del contenido principal */
+  .main-content {
+    margin-left: 80px;
+    margin-right: auto;
+    padding: 1.5rem;
+    max-width: 100%;
+    width: calc(100% - 80px); /* Ajuste preciso del ancho */
+  }
+
+  .content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Alineación del contenido del sidebar */
+  .sidebar a {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .sidebar .theme-settings,
+  .sidebar .profile {
+    align-items: center;
+    text-align: center;
+  }
+}
+
+
+
+/* RESPONSIVE MÓVIL - sidebar abajo, todo a una columna */
 @media (max-width: 768px) {
-  .football-header {
+  .sidebar {
+    width: 100%;
+    height: 70px;
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    display: flex;
+    background-color: var(--sidebar-color);
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+    z-index: 999;
+    overflow: hidden;
+  }
+
+  /* Ocultar logo en móvil */
+  .sidebar .logo {
+    display: none !important;
+  }
+
+  .sidebar-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
+    padding: 0 0.5rem;
+    gap: 0.5rem;
+  }
+
+  .sidebar-content a,
+  .sidebar-content .theme-settings,
+  .sidebar-content .profile {
+    flex: 0 0 auto;
+  }
+
+  .sidebar a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.5rem;
+  }
+
+  .sidebar a span {
+    display: none;
+  }
+
+  .theme-settings {
+    display: flex !important;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .theme-buttons {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .theme-buttons .theme-btn {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.5rem;
+  }
+
+  .profile {
+    display: flex !important;
     flex-direction: column;
     align-items: flex-start;
-  }
-  
-  .search-container {
-    width: 100%;
-    max-width: none;
-  }
-  
-  .teams-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  }
-  
-  .stats-grid {
-    grid-template-columns: 1fr;
+    gap: 0.25rem;
   }
 
-  .transition-row {
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-.transition-row:hover {
-  background-color: rgba(0, 204, 51, 0.1);
-  transform: scale(1.01);
-}
+  .frase-del-dia,
+  #dailyQuoteBlock {
+    display: none !important;
+  }
 
+  .main-content {
+    margin: 0;
+    padding: 1rem;
+    margin-bottom: 80px;
+  }
 }

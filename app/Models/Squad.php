@@ -9,6 +9,7 @@ class Squad extends Model
 {
     use HasFactory;
 
+    // Define los campos que se pueden asignar
     protected $fillable = [
         'team_id',
         'name',

@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const profileButton = document.getElementById('profileButton');
   if (profileButton) {
     profileButton.addEventListener('click', function(e) {
-      // Evitar que se active si se hace clic en el botón de logout
       if (!e.target.closest('#logoutButton')) {
         window.location.href = '/profile';
       }
@@ -28,13 +27,5 @@ document.addEventListener('DOMContentLoaded', function() {
       editProfileModal.show();
     });
   }
-
-  // Guardar cambios del perfil
-
-
-  // Cambiar contraseña
-
-
-  // Añadir equipo
 
 });

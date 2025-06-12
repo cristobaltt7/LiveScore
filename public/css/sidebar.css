@@ -1,0 +1,72 @@
+/* Ancho del sidebar */
+.sidebar {
+    width: 260px;
+}
+
+/* Logo dentro del sidebar */
+.sidebar .logo img {
+    height: 48px;
+}
+
+/* Botones para cambiar el tema (oscuro/claro) */
+.theme-buttons .theme-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+    width: 100%;
+    background-color: transparent !important;
+    color: white !important;
+    border: 1px solid white !important;
+}
+
+/* Bloque de la frase del día */
+#dailyQuoteBlock {
+    background-color: #1c1c1c !important;
+    color: white !important;
+    font-size: 0.85rem;
+}
+
+/* Asegura que todo dentro del bloque tenga texto blanco */
+#dailyQuoteBlock * {
+    color: white !important;
+}
+
+/* Ícono de comillas dentro de la frase */
+#dailyQuoteBlock .bi-chat-quote {
+    color: gray !important;
+    font-size: 1.2rem;
+}
+
+/* Título de la frase */
+#quoteTitle {
+    font-weight: bold;
+    font-size: 0.9rem;
+    line-height: 1.1;
+}
+
+/* Contenido de la frase */
+#dailyQuote {
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    color: white !important; 
+}
+
+/* Logo dentro del sidebar */
+.sidebar .logo img {
+    height: 120px;
+    max-height: none;
+    width: auto;
+    margin-bottom: 1rem;
+}
+
+/* Título de la sección 'Frase del día' */
+.frase-del-dia h6 {
+    margin-bottom: 1rem !important; 
+    color: white;
+}
+
+/* Texto de la frase del día */
+.frase-del-dia p {
+    margin-top: 0 !important;
+    color: white;
+    font-size: 0.9rem;
+}

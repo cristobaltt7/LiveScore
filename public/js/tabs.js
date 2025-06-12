@@ -1,3 +1,4 @@
+// Maneja la activación de pestañas por fecha y aplica estilos de texto blanco a inputs y textos grises
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.date-tab').forEach(tab => {
     tab.addEventListener('click', () => {

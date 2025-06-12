@@ -14,6 +14,7 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    // Muestra la vista de edición del perfil del usuario autenticado
     public function edit(Request $request): View
     {
         return view('profile.edit', [
@@ -21,29 +22,30 @@ class ProfileController extends Controller
         ]);
     }
 
-   public function update(ProfileUpdateRequest $request): RedirectResponse
-{
-    $user = $request->user();
+    //  Actualiza los datos del perfil del usuario (nombre, email, avatar, etc.)
+    public function update(ProfileUpdateRequest $request): RedirectResponse
+    {
+        $user = $request->user();
 
-    $user->fill($request->validated());
+        $user->fill($request->validated());
 
-    if ($request->hasFile('avatar')) {
-        $file = $request->file('avatar');
-        $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-        $file->storeAs('public/avatars', $filename);
-        $user->avatar = $filename;
+        if ($request->hasFile('avatar')) {
+            $file = $request->file('avatar');
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/avatars', $filename);
+            $user->avatar = $filename;
+        }
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        return redirect()->route('profile.edit')->with('status', 'profile-updated');
     }
 
-    if ($user->isDirty('email')) {
-        $user->email_verified_at = null;
-    }
-
-    $user->save();
-
-    return redirect()->route('profile.edit')->with('status', 'profile-updated');
-}
-
-
+    // Actualiza la contraseña del usuario
     public function updatePassword(Request $request)
     {
         $request->validate([
@@ -62,6 +64,7 @@ class ProfileController extends Controller
         return back()->with('status', 'password-updated');
     }
 
+    // Elimina la cuenta del usuario
     public function destroy(Request $request): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [

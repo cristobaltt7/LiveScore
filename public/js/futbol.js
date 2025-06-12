@@ -1,3 +1,4 @@
+// Obtiene los partidos en vivo desde la API de football-data.org y los muestra dinámicamente en la página
 document.addEventListener('DOMContentLoaded', () => {
     $apiToken = env('FOOTBALL_DATA_API_TOKEN');
 
@@ -15,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(data => {
       const matches = data.matches || [];
       const container = document.querySelector('.match-card');
-      container.innerHTML = ''; // Limpia contenido previo
+      container.innerHTML = '';
 
       if (matches.length === 0) {
         container.innerHTML = '<p>No hay partidos en vivo actualmente.</p>';
@@ -26,10 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const home = match.homeTeam?.name || 'Local';
         const away = match.awayTeam?.name || 'Visitante';
 
-        // En football-data.org los goles suelen estar en score.fullTime
         const goalsHome = match.score?.fullTime?.home ?? 0;
         const goalsAway = match.score?.fullTime?.away ?? 0;
-        const status = match.status; // debería ser LIVE
+        const status = match.status;
 
         const row = document.createElement('div');
         row.classList.add('match-row');

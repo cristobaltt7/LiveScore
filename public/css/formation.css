@@ -1,0 +1,45 @@
+/* Campo de fútbol */
+.field {
+  background: url('/images/football_field.png') center/cover no-repeat;
+  width: 100%;
+  max-width: 900px;
+  height: 500px;
+  margin: 0 auto 2rem;
+  position: relative;
+}
+
+/* Círculo que representa a un jugador en el campo */
+.player-dot {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #00c853, #009624);
+  color: #fff;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+  line-height: 60px;
+  cursor: pointer;
+  border: 2px solid #ffffffcc;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Contenedor de la lista de jugadores */
+.player-list {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Tarjeta visual de cada jugador en la lista */
+.player-card {
+  background: #222;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+

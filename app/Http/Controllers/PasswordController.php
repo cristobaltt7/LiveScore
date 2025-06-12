@@ -8,6 +8,7 @@ use Illuminate\Validation\Rules\Password;
 
 class PasswordController extends Controller
 {
+    // Método que actualiza la contraseña del usuario
     public function update(Request $request)
     {
         $request->validate([

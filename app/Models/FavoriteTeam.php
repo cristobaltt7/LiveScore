@@ -9,6 +9,7 @@ class FavoriteTeam extends Model
 {
     use HasFactory;
 
+    // Define los campos que pueden ser asignados
     protected $fillable = [
         'user_id',
         'football_data_id',

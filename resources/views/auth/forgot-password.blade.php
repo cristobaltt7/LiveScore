@@ -4,6 +4,7 @@
 
 <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
+<!-- Contenedor principal -->
 <div class="container py-5 text-white">
     <h2 class="mb-4 text-center"><i class="bi bi-question-circle"></i> Recuperar contraseña</h2>
 
@@ -23,6 +24,8 @@
 
     <div class="card bg-dark">
         <div class="card-body">
+            
+        <!-- Formulario para verificar y restablecer contraseña -->
             <form method="POST" action="{{ route('password.verify') }}">
                 @csrf
 

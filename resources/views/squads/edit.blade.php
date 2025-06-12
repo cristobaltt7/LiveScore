@@ -1,12 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="container">
+
     <h2>Editar jugador</h2>
 
+    <!-- Formulario para actualizar los datos del jugador -->
     <form method="POST" action="{{ route('squads.update', $squad->id) }}">
-        @csrf @method('PUT')
-        
+        @csrf 
+        @method('PUT')
+
         <div class="mb-3">
             <label class="form-label">Nombre</label>
             <input type="text" name="name" class="form-control" value="{{ $squad->name }}" required>
@@ -30,4 +34,5 @@
         <button class="btn btn-primary">Actualizar</button>
     </form>
 </div>
+
 @endsection

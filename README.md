@@ -1,6 +1,16 @@
 ## LiveScore
 
-LiveScore es una aplicación web que ofrece resultados deportivos.
+LiveScore es una aplicación web que ofrece resultados deportivos de la Liga Española.
+
+## APIs utilizadas
+
+LiveScore obtiene sus datos en tiempo real a través de tres APIs principales:
+
+- **[Football-Data.org](https://www.football-data.org/)**: API gratuita que proporciona información básica como equipos (nombre y escudo), tabla de clasificación de La Liga y máximos goleadores.
+
+- **[Transfermarkt API](https://transfermarkt-api.fly.dev/)**: API no oficial que ofrece información muy detallada sobre clubes, jugadores, plantillas, biografías, estadísticas, historial de lesiones, logros, escudos históricos, entre otros. Al ser una API gratuita y no oficial, presenta errores de servidor ocasionales.
+
+- **[GNews](https://gnews.io/)**: API de noticias utilizada para mostrar artículos relacionados con el fútbol español. El plan gratuito permite 100 solicitudes al día.
 
 ## Acceso a Figma
 

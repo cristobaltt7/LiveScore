@@ -8,29 +8,33 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
+
+    // Muestra la vista del formulario de login.
     public function showLogin()
     {
         return view('auth.login');
     }
 
-public function login(Request $request)
-{
-    $credentials = $request->only('email', 'password');
+    // Procesa el intento de login del usuario.
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
 
-    if (Auth::attempt($credentials)) {
-        $request->session()->regenerate();
-        return redirect()->intended('/');
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->intended('/');
+        }
+
+        return back()->with('error', 'Credenciales incorrectas.');
     }
 
-    return back()->with('error', 'Credenciales incorrectas.'); // Este es el que usas en el login.blade.php
-}
-
-
+    // Muestra la vista del formulario de registro.
     public function showRegister()
     {
         return view('auth.register');
     }
 
+    // Procesa el registro de un nuevo usuario.
     public function register(Request $request)
     {
         $request->validate([
@@ -55,6 +59,7 @@ public function login(Request $request)
         return redirect('/');
     }
 
+    // Cierra la sesión del usuario.
     public function logout(Request $request)
     {
         Auth::logout();
@@ -62,34 +67,35 @@ public function login(Request $request)
         $request->session()->regenerateToken();
         return redirect('/login');
     }
-public function showForgotPassword()
-{
-    return view('auth.forgot-password');
-}
 
-public function verifySecretAnswer(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email',
-        'secret_answer' => 'required',
-        'new_password' => 'required|min:6|confirmed',
-    ]);
-
-    $user = User::where('email', $request->email)->first();
-
-    if (!$user) {
-        return back()->withErrors(['email' => 'Usuario no encontrado.']);
+    // Muestra el formulario para recuperar contraseña.
+    public function showForgotPassword()
+    {
+        return view('auth.forgot-password');
     }
 
-    if ($user->secret_answer !== $request->secret_answer) {
-        return back()->withErrors(['secret_answer' => 'La respuesta secreta no es correcta.']);
+    // Verifica la respuesta secreta y actualiza la contraseña.
+    public function verifySecretAnswer(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'secret_answer' => 'required',
+            'new_password' => 'required|min:6|confirmed',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return back()->withErrors(['email' => 'Usuario no encontrado.']);
+        }
+
+        if ($user->secret_answer !== $request->secret_answer) {
+            return back()->withErrors(['secret_answer' => 'La respuesta secreta no es correcta.']);
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return redirect()->route('login')->with('status', 'Contraseña actualizada correctamente. Ahora puedes iniciar sesión.');
     }
-
-    $user->password = Hash::make($request->new_password);
-    $user->save();
-
-    return redirect()->route('login')->with('status', 'Contraseña actualizada correctamente. Ahora puedes iniciar sesión.');
-}
-
-
 }

@@ -1,0 +1,133 @@
+/* Estilo general del cuerpo de la página */
+body {
+  background-color: #2e2e2e;
+  font-family: "Segoe UI", sans-serif;
+  background-image: url("/images/fondo_login.jpg");
+}
+
+/* Contenedor principal del formulario de registro */
+.signup-container {
+  min-height: 100vh;
+}
+
+/* Tarjeta de registro */
+.signup-card {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Título del formulario */
+.signup-card h2 {
+  font-weight: 700;
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+/* Sección del logo encima del formulario */
+.signup-logo {
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+/* Imagen del logo */
+.logo-img {
+  max-width: 150px;
+  height: auto;
+  display: inline-block;
+}
+
+/* Estilo del campo cuando está enfocado */
+.form-control:focus {
+  box-shadow: none;
+  border-color: #00cc33;
+}
+
+/* Botón de registro */
+.btn-signup {
+  background-color: #28a745;
+  border: none;
+}
+
+/* Hover del botón */
+.btn-signup:hover {
+  background-color: #218838;
+}
+
+/* Enlaces de texto, como "Ya tienes cuenta?" */
+.text-link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+/* Hover en los enlaces */
+.text-link:hover {
+  text-decoration: underline;
+}
+
+/* Iconos dentro de los inputs */
+.form-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ccc;
+}
+
+/* Mensajes de error del formulario */
+.error-message {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 2px;
+  margin-bottom: 8px;
+}
+
+/* Estilos responsivos para tablets */
+@media (max-width: 768px) {
+  .signup-card {
+    padding: 1.5rem;
+  }
+
+  .signup-logo img {
+    max-width: 180px;
+  }
+
+  .signup-card h2 {
+    font-size: 1.5rem;
+  }
+
+  .form-icon {
+    right: 10px;
+  }
+
+  .form-control {
+    padding-right: 2.5rem;
+  }
+}
+
+/* Estilos responsivos para móviles */
+@media (max-width: 480px) {
+  .signup-card {
+    max-width: 100%;
+    padding: 1rem;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .form-icon {
+    font-size: 0.9rem;
+    right: 8px;
+  }
+
+  .btn-signup {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
+
+  .text-link {
+    font-size: 0.9rem;
+  }
+}

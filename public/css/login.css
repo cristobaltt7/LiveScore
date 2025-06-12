@@ -1,0 +1,149 @@
+/* Estilos generales del body */
+body {
+  background-color: #2e2e2e;
+  background-image: url("/images/fondo_login.jpg");
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Contenedor principal centrado verticalmente */
+.login-container {
+  min-height: 100vh;
+}
+
+/* Tarjeta de login (formulario) */
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Título dentro de la tarjeta de login */
+.login-card h2 {
+  font-weight: 700;
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+/* Logo o título superior del login */
+.login-logo {
+  color: #00cc33;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+/* Enfoque en campos del formulario */
+.form-control:focus {
+  box-shadow: none;
+  border-color: #00cc33;
+}
+
+/* Botón principal de login */
+.btn-login {
+  background-color: #28a745;
+  border: none;
+}
+
+/* Hover del botón de login */
+.btn-login:hover {
+  background-color: #218838;
+}
+
+/* Enlaces de texto, como "¿Olvidaste tu contraseña?" */
+.text-link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+/* Hover en los enlaces */
+.text-link:hover {
+  text-decoration: underline;
+}
+
+/* Iconos dentro de los campos del formulario */
+.form-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ccc;
+}
+
+/* Mensajes de error en campos */
+.error-message {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 2px;
+  margin-bottom: 8px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #6c757d;
+  z-index: 5;
+}
+
+.password-toggle:hover {
+  color: #495057;
+}
+
+/* Asegúrate que el input de contraseña tenga espacio para el ojo */
+.position-relative input[type="password"],
+.position-relative input[type="text"] {
+  padding-right: 35px;
+}
+
+/* Estilos responsive para tablets */
+@media (max-width: 768px) {
+  .login-card {
+    padding: 1.5rem;
+  }
+
+  .login-logo img {
+    max-width: 180px;
+  }
+
+  .login-card h2 {
+    font-size: 1.5rem;
+  }
+
+  .form-icon {
+    right: 10px;
+  }
+
+  .form-control {
+    padding-right: 2.5rem;
+  }
+}
+
+/* Estilos responsive para móviles */
+@media (max-width: 480px) {
+  .login-card {
+    max-width: 100%;
+    padding: 1rem;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .form-icon {
+    font-size: 0.9rem;
+    right: 8px;
+  }
+
+  .btn-login {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
+
+  .text-link {
+    font-size: 0.9rem;
+  }
+}

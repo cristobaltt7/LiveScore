@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 
 class FootballController extends Controller
 {
+
+    // Página principal del sitio con últimos partidos y clasificación
     public function home()
     {
         try {
@@ -62,6 +64,7 @@ class FootballController extends Controller
         }
     }
 
+    // Dar formato a los partidos para mostrar en la vista
     private function formatFixtures($fixtures)
     {
         return array_map(function ($fixture) {
@@ -82,6 +85,7 @@ class FootballController extends Controller
         }, $fixtures);
     }
 
+    // Dar formato a la clasificación para mostrar en la vista
     private function formatStandings($standings)
     {
         return array_map(function ($team) {
@@ -103,22 +107,26 @@ class FootballController extends Controller
             ];
         }, $standings);
     }
+
+    // Buscar equipos por nombre desde football-data
     public function search(Request $request)
-{
-    $query = $request->query('query');
-    if (!$query) return response()->json([]);
+    {
+        $query = $request->query('query');
+        if (!$query)
+            return response()->json([]);
 
-    $response = Http::withHeaders([
-        'X-Auth-Token' => env('FOOTBALL_DATA_API_TOKEN')
-    ])->get("https://api.football-data.org/v4/teams?name=" . urlencode($query));
+        $response = Http::withHeaders([
+            'X-Auth-Token' => env('FOOTBALL_DATA_API_TOKEN')
+        ])->get("https://api.football-data.org/v4/teams?name=" . urlencode($query));
 
-    if ($response->failed()) return response()->json([]);
+        if ($response->failed())
+            return response()->json([]);
 
-    return response()->json($response->json()['teams'] ?? []);
-}
+        return response()->json($response->json()['teams'] ?? []);
+    }
 
-
-  public function index()
+    // Mostrar todos los equipos de LaLiga
+    public function index()
     {
         try {
             $apiToken = env('FOOTBALL_DATA_API_TOKEN');
@@ -159,13 +167,13 @@ class FootballController extends Controller
             foreach ($teams as &$team) {
                 $team['club_id'] = $clubIdMap[$team['id']] ?? null;
             }
-$favoritos = array_keys(json_decode(auth()->user()->favorite_teams ?? '{}', true));
+            $favoritos = array_keys(json_decode(auth()->user()->favorite_teams ?? '{}', true));
 
 
-return view('football', [
-    'teams' => $teams,
-    'favoritos' => $favoritos
-]);
+            return view('football', [
+                'teams' => $teams,
+                'favoritos' => $favoritos
+            ]);
 
 
         } catch (\Exception $e) {
@@ -177,196 +185,207 @@ return view('football', [
     }
 
 
+    // Obtener lista de ligas disponibles
+    public function availableLeagues()
+    {
+        $apiToken = env('FOOTBALL_DATA_API_TOKEN');
+        $response = Http::withHeaders([
+            'X-Auth-Token' => $apiToken
+        ])->get('https://api.football-data.org/v4/competitions');
 
-public function availableLeagues()
-{
-    $apiToken = env('FOOTBALL_DATA_API_TOKEN');
-    $response = Http::withHeaders([
-        'X-Auth-Token' => $apiToken
-    ])->get('https://api.football-data.org/v4/competitions');
+        $competitions = collect($response->json('competitions'))
+            ->filter(fn($c) => $c['plan'] === 'TIER_ONE')
+            ->map(fn($c) => [
+                'code' => $c['code'],
+                'name' => $c['name']
+            ])
+            ->values();
 
-    $competitions = collect($response->json('competitions'))
-        ->filter(fn($c) => $c['plan'] === 'TIER_ONE') // Solo ligas principales
-        ->map(fn($c) => [
-            'code' => $c['code'],
-            'name' => $c['name']
-        ])
-        ->values();
-
-    return response()->json($competitions);
-}
-public function getSquad($id)
-{
-    $players = Squad::where('team_id', $id)->get();
-    return response()->json($players);
-}
-
-
-public function teamDetails($id)
-{
-    // Mapeo Football-Data ID => Transfermarkt club_id
-    $clubIdMap = [
-        81 => 131, 86 => 418, 78 => 13, 559 => 368, 92 => 681,
-        95 => 1049, 94 => 1050, 90 => 150, 77 => 621, 82 => 3709,
-        298 => 12321, 87 => 367, 250 => 366, 745 => 1244, 275 => 472,
-        89 => 237, 80 => 714, 263 => 1108, 558 => 940, 79 => 331
-    ];
-
-    $clubId = $clubIdMap[$id] ?? null;
-
-    if (!$clubId) {
-        return response()->json(['error' => 'Club ID no mapeado'], 404);
+        return response()->json($competitions);
     }
 
-    $response = Http::get("https://transfermarkt-api.fly.dev/clubs/{$clubId}/profile");
-
-    if ($response->failed()) {
-        return response()->json(['error' => 'No se pudo obtener el perfil del club'], 500);
+    // Obtener plantilla personalizada (guardada en la base de datos)
+    public function getSquad($id)
+    {
+        $players = Squad::where('team_id', $id)->get();
+        return response()->json($players);
     }
 
-    $data = $response->json();
-
-    return response()->json([
-        'team' => [
-            'id' => $id,
-            'name' => $data['name'] ?? 'Desconocido',
-            'logo' => $data['image'] ?? '',
-            'country' => $data['addressLine3'] ?? 'Desconocido',
-            'founded' => isset($data['foundedOn']) ? substr($data['foundedOn'], 0, 4) : 'Desconocido'
-        ],
-        'venue' => [
-            'name' => $data['stadiumName'] ?? 'Desconocido',
-            'capacity' => $data['stadiumSeats'] ?? 0
-        ],
-        'statistics' => null
-    ]);
-}
-
-
-
-public function getTeamSquad($teamId)
-{
-    try {
-        // Primero obtenemos los detalles básicos del equipo de football-data
-        $teamResponse = Http::withHeaders([
-            'X-Auth-Token' => env('FOOTBALL_DATA_API_TOKEN')
-        ])->get("https://api.football-data.org/v4/teams/{$teamId}");
-
-        $teamData = $teamResponse->successful() ? $teamResponse->json() : [];
-        
-        // Ahora obtenemos la plantilla de Transfermarkt API
-        $transfermarktResponse = Http::get("https://transfermarkt-api.fly.dev/clubs/{$teamId}/players");
-        
-        if ($transfermarktResponse->failed()) {
-            throw new \Exception('Error al obtener la plantilla del equipo');
-        }
-
-        $squadData = $transfermarktResponse->json();
-        
-        // Organizar jugadores por posición
-        $squad = [
-            'goalkeepers' => [],
-            'defenders' => [],
-            'midfielders' => [],
-            'forwards' => []
+    // Obtener detalles de un equipo desde Transfermarkt
+    public function teamDetails($id)
+    {
+        // Mapeo Football-Data ID => Transfermarkt club_id
+        $clubIdMap = [
+            81 => 131,
+            86 => 418,
+            78 => 13,
+            559 => 368,
+            92 => 681,
+            95 => 1049,
+            94 => 1050,
+            90 => 150,
+            77 => 621,
+            82 => 3709,
+            298 => 12321,
+            87 => 367,
+            250 => 366,
+            745 => 1244,
+            275 => 472,
+            89 => 237,
+            80 => 714,
+            263 => 1108,
+            558 => 940,
+            79 => 331
         ];
 
-        foreach ($squadData['players'] ?? [] as $player) {
-            $position = strtolower($player['position'] ?? '');
-            
-            if (str_contains($position, 'goalkeeper')) {
-                $squad['goalkeepers'][] = $player;
-            } elseif (str_contains($position, 'back') || str_contains($position, 'defender')) {
-                $squad['defenders'][] = $player;
-            } elseif (str_contains($position, 'midfield')) {
-                $squad['midfielders'][] = $player;
-            } else {
-                $squad['forwards'][] = $player;
-            }
+        $clubId = $clubIdMap[$id] ?? null;
+
+        if (!$clubId) {
+            return response()->json(['error' => 'Club ID no mapeado'], 404);
         }
+
+        $response = Http::get("https://transfermarkt-api.fly.dev/clubs/{$clubId}/profile");
+
+        if ($response->failed()) {
+            return response()->json(['error' => 'No se pudo obtener el perfil del club'], 500);
+        }
+
+        $data = $response->json();
 
         return response()->json([
             'team' => [
-                'name' => $teamData['name'] ?? $squadData['club']['name'] ?? 'Desconocido',
-                'crest' => $teamData['crest'] ?? null
+                'id' => $id,
+                'name' => $data['name'] ?? 'Desconocido',
+                'logo' => $data['image'] ?? '',
+                'country' => $data['addressLine3'] ?? 'Desconocido',
+                'founded' => isset($data['foundedOn']) ? substr($data['foundedOn'], 0, 4) : 'Desconocido'
             ],
-            'squad' => $squad
+            'venue' => [
+                'name' => $data['stadiumName'] ?? 'Desconocido',
+                'capacity' => $data['stadiumSeats'] ?? 0
+            ],
+            'statistics' => null
         ]);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
-    }
-}
-
-
-public function getTransfermarktSquad($clubId)
-{
-    $response = Http::get("https://transfermarkt-api.fly.dev/clubs/{$clubId}/players");
-
-    if ($response->successful()) {
-        return response()->json($response->json());
     }
 
-    return response()->json([
-        'error' => 'No se pudo obtener la plantilla',
-        'status' => $response->status(),
-        'body' => $response->body()
-    ], $response->status());
-}
 
-public function resultados(Request $request)
-{
-    $apiToken = env('FOOTBALL_DATA_API_TOKEN');
-    $jornada = $request->query('jornada'); // ej: 1, 2, 3...
+    // Obtener plantilla desde Transfermarkt y Football-Data
+    public function getTeamSquad($teamId)
+    {
+        try {
+            $teamResponse = Http::withHeaders([
+                'X-Auth-Token' => env('FOOTBALL_DATA_API_TOKEN')
+            ])->get("https://api.football-data.org/v4/teams/{$teamId}");
 
-    // Obtener resultados de partidos
-    $matchesUrl = "https://api.football-data.org/v4/competitions/PD/matches";
-    if ($jornada) {
-        $matchesUrl .= "?matchday=$jornada";
+            $teamData = $teamResponse->successful() ? $teamResponse->json() : [];
+
+            $transfermarktResponse = Http::get("https://transfermarkt-api.fly.dev/clubs/{$teamId}/players");
+
+            if ($transfermarktResponse->failed()) {
+                throw new \Exception('Error al obtener la plantilla del equipo');
+            }
+
+            $squadData = $transfermarktResponse->json();
+
+            $squad = [
+                'goalkeepers' => [],
+                'defenders' => [],
+                'midfielders' => [],
+                'forwards' => []
+            ];
+
+            foreach ($squadData['players'] ?? [] as $player) {
+                $position = strtolower($player['position'] ?? '');
+
+                if (str_contains($position, 'goalkeeper')) {
+                    $squad['goalkeepers'][] = $player;
+                } elseif (str_contains($position, 'back') || str_contains($position, 'defender')) {
+                    $squad['defenders'][] = $player;
+                } elseif (str_contains($position, 'midfield')) {
+                    $squad['midfielders'][] = $player;
+                } else {
+                    $squad['forwards'][] = $player;
+                }
+            }
+
+            return response()->json([
+                'team' => [
+                    'name' => $teamData['name'] ?? $squadData['club']['name'] ?? 'Desconocido',
+                    'crest' => $teamData['crest'] ?? null
+                ],
+                'squad' => $squad
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
-    $matchesResponse = Http::withHeaders([
-        'X-Auth-Token' => $apiToken
-    ])->get($matchesUrl);
+    // Obtener plantilla desde Transfermarkt directamente (club_id)
+    public function getTransfermarktSquad($clubId)
+    {
+        $response = Http::get("https://transfermarkt-api.fly.dev/clubs/{$clubId}/players");
 
-    $matches = $matchesResponse->successful()
-        ? ($matchesResponse->json()['matches'] ?? [])
-        : [];
+        if ($response->successful()) {
+            return response()->json($response->json());
+        }
 
-    // Obtener clasificación
-    $standingsResponse = Http::withHeaders([
-        'X-Auth-Token' => $apiToken
-    ])->get("https://api.football-data.org/v4/competitions/PD/standings");
-
-    $standings = $standingsResponse->successful()
-        ? ($standingsResponse->json()['standings'][0]['table'] ?? [])
-        : [];
-
-    // Obtener máximos goleadores (scorers)
-    $scorersResponse = Http::withHeaders([
-        'X-Auth-Token' => $apiToken
-    ])->get("https://api.football-data.org/v4/competitions/PD/scorers");
-
-    $scorers = $scorersResponse->successful()
-        ? ($scorersResponse->json()['scorers'] ?? [])
-        : [];
-
-    return view('liga.resultados', compact('matches', 'standings', 'jornada', 'scorers'));
-}
-
-
-public function verClub($id)
-{
-    $url = "https://transfermarkt-api.fly.dev/clubs/{$id}/profile";
-
-    $response = Http::get($url);
-
-    if ($response->successful()) {
-        $data = $response->json();
-        return view('club-info', ['data' => $data]);
+        return response()->json([
+            'error' => 'No se pudo obtener la plantilla',
+            'status' => $response->status(),
+            'body' => $response->body()
+        ], $response->status());
     }
 
-    return redirect()->route('favorites')->with('error', 'No se pudo cargar la información del club.');
-}
+    // Mostrar resultados por jornada, clasificación y goleadores
+    public function resultados(Request $request)
+    {
+        $apiToken = env('FOOTBALL_DATA_API_TOKEN');
+        $jornada = $request->query('jornada');
 
+        $matchesUrl = "https://api.football-data.org/v4/competitions/PD/matches";
+        if ($jornada) {
+            $matchesUrl .= "?matchday=$jornada";
+        }
 
+        $matchesResponse = Http::withHeaders([
+            'X-Auth-Token' => $apiToken
+        ])->get($matchesUrl);
+
+        $matches = $matchesResponse->successful()
+            ? ($matchesResponse->json()['matches'] ?? [])
+            : [];
+
+        $standingsResponse = Http::withHeaders([
+            'X-Auth-Token' => $apiToken
+        ])->get("https://api.football-data.org/v4/competitions/PD/standings");
+
+        $standings = $standingsResponse->successful()
+            ? ($standingsResponse->json()['standings'][0]['table'] ?? [])
+            : [];
+
+        $scorersResponse = Http::withHeaders([
+            'X-Auth-Token' => $apiToken
+        ])->get("https://api.football-data.org/v4/competitions/PD/scorers");
+
+        $scorers = $scorersResponse->successful()
+            ? ($scorersResponse->json()['scorers'] ?? [])
+            : [];
+
+        return view('liga.resultados', compact('matches', 'standings', 'jornada', 'scorers'));
+    }
+
+    // Ver perfil completo de un club desde Transfermarkt
+    public function verClub($id)
+    {
+        $url = "https://transfermarkt-api.fly.dev/clubs/{$id}/profile";
+
+        $response = Http::get($url);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            return view('club-info', ['data' => $data]);
+        }
+
+        return redirect()->route('favorites')->with('error', 'No se pudo cargar la información del club.');
+    }
 }

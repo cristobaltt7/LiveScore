@@ -1,4 +1,5 @@
-// nuevo teamSquad.js
+// Renderiza la formación inicial del equipo sobre el campo, muestra un selector editable de alineación
+// y genera una tabla con la plantilla completa del equipo, incluyendo sus datos y estadísticas.
 function renderFormation(players) {
     const container = document.getElementById("formationPlayers");
     const fullSquadContainer = document.getElementById("fullSquadContainer");
@@ -7,6 +8,11 @@ function renderFormation(players) {
     fullSquadContainer.innerHTML = "";
     lineupSelector.innerHTML = "";
 
+    // Ocultar buscador
+    const search = document.getElementById('searchContainer');
+    if (search) search.style.display = 'none';
+
+    // Coordenadas para cada posicion en la formación 4-3-3
     const positions = {
         GK: [{ x: 10, y: 50 }],
         DF: [
@@ -20,6 +26,7 @@ function renderFormation(players) {
         ]
     };
 
+    // Agrupa jugadores según su posición
     const grouped = {
         GK: players.filter(p => /goalkeeper/i.test(p.position)),
         DF: players.filter(p => /back|defend/i.test(p.position)),
@@ -27,6 +34,7 @@ function renderFormation(players) {
         FW: players.filter(p => /forward|wing|striker|attack/i.test(p.position))
     };
 
+    // Renderiza los jugadores iniciales en el campo
     const currentLineup = {};
     for (const role in positions) {
         grouped[role] = grouped[role].sort(() => 0.5 - Math.random());
@@ -47,7 +55,7 @@ function renderFormation(players) {
         });
     }
 
-    // Tabla editable de alineación
+    // Crea una tabla editable para cambiar el once inicial
     const table = document.createElement('table');
     table.className = 'table table-sm table-dark table-bordered text-white';
     table.innerHTML = `
@@ -67,25 +75,25 @@ function renderFormation(players) {
     `;
     lineupSelector.appendChild(table);
 
-  const buttonContainer = document.createElement('div');
-buttonContainer.className = "text-center mt-3";
+    // Botón para actualizar el once en el campo
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = "text-center mt-3";
 
-const updateBtn = document.createElement('button');
-updateBtn.textContent = "Actualizar once";
-updateBtn.className = "btn btn-outline-light px-4 py-2 fw-bold";
-updateBtn.onclick = () => {
-    const newLineup = {};
-    lineupSelector.querySelectorAll('select').forEach(sel => {
-        newLineup[sel.dataset.pos] = sel.value;
-    });
+    const updateBtn = document.createElement('button');
+    updateBtn.textContent = "Actualizar once";
+    updateBtn.className = "btn btn-outline-light px-4 py-2 fw-bold";
+    updateBtn.onclick = () => {
+        const newLineup = {};
+        lineupSelector.querySelectorAll('select').forEach(sel => {
+            newLineup[sel.dataset.pos] = sel.value;
+        });
+        renderCustomLineup(newLineup, players, positions);
+    };
 
-    renderCustomLineup(newLineup, players, positions);
-};
+    buttonContainer.appendChild(updateBtn);
+    lineupSelector.appendChild(buttonContainer);
 
-buttonContainer.appendChild(updateBtn);
-lineupSelector.appendChild(buttonContainer);
-
-    // Plantilla completa
+    // Muestra la plantilla completa del equipo en una tabla
     const plantillaHtml = `
         <div class="table-responsive animate__animated animate__fadeInUp mt-4">
             <table id="playersTable" class="table table-dark table-striped table-bordered table-hover rounded shadow">
@@ -116,7 +124,7 @@ lineupSelector.appendChild(buttonContainer);
     `;
     fullSquadContainer.innerHTML = plantillaHtml;
 
-    // DataTable + orden con tildes
+    // Inicializa la tabla con DataTables para orden y búsqueda
     $.fn.dataTable.ext.type.order['locale-compare-asc'] = (a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' });
     $.fn.dataTable.ext.type.order['locale-compare-desc'] = (a, b) => b.localeCompare(a, 'es', { sensitivity: 'base' });
 
@@ -140,6 +148,7 @@ lineupSelector.appendChild(buttonContainer);
     }, 100);
 }
 
+// Renderiza el once personalizado según la selección del usuario
 function renderCustomLineup(lineup, players, positions) {
     const container = document.getElementById("formationPlayers");
     container.innerHTML = "";
@@ -161,6 +170,7 @@ function renderCustomLineup(lineup, players, positions) {
     }
 }
 
+// Crea el contenedor del selector de alineación si no existe
 function createLineupSelector() {
     const div = document.createElement("div");
     div.id = "lineupSelector";
@@ -169,6 +179,7 @@ function createLineupSelector() {
     return div;
 }
 
+// Formatea el valor numérico en euros con separador de miles
 function formatValue(num) {
     if (!num || isNaN(num)) return 'N/D';
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " €";

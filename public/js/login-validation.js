@@ -1,5 +1,5 @@
+// Maneja la visibilidad de la contraseña, validación del formulario de login y muestra errores personalizados del backend
 document.addEventListener("DOMContentLoaded", function () {
-  // Show/hide password in login
   const icon = document.querySelector(".form-icon");
   if (icon) {
     icon.addEventListener("click", function () {
@@ -19,9 +19,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const form = document.querySelector("form");
   if (!form) return;
 
-  // Function to show error message
+  // Funcion que muestra mensajes de error
   function showError(input, message) {
-    // Check if error message already exists
     let error = input.nextElementSibling;
     if (!error || !error.classList.contains("error-message")) {
       error = document.createElement("div");
@@ -31,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
     error.textContent = message;
   }
 
-  // Function to clear error messages
+  // Funcion para limpiar los mensajes de error
   function clearErrors(form) {
     form.querySelectorAll(".error-message").forEach(el => el.remove());
   }
@@ -44,24 +43,40 @@ document.addEventListener("DOMContentLoaded", function () {
     const passwordInput = form.querySelector('input[name="password"]');
 
     if (!emailInput.value.trim()) {
-      showError(emailInput, "Please enter your username or email.");
+      showError(emailInput, "Por favor, introduce tu correo.");
       emailInput.focus();
       valid = false;
     }
 
     if (!passwordInput.value) {
-      showError(passwordInput, "Please enter your password.");
+      showError(passwordInput, "Por favor, introduce tu contraseña.");
       if (valid) passwordInput.focus();
       valid = false;
     }
 
     if (!valid) event.preventDefault();
   });
-  // Mostrar mensaje de error si Laravel devolvió error desde backend
-const backendError = document.querySelector('[data-login-error]');
-if (backendError) {
-  const passwordInput = form.querySelector('input[name="password"]');
-  showError(passwordInput, backendError.dataset.loginError);
-}
+
+  const backendError = document.querySelector('[data-login-error]');
+  if (backendError) {
+    const passwordInput = form.querySelector('input[name="password"]');
+    showError(passwordInput, backendError.dataset.loginError);
+  }
 
 });
+
+// Funcion para mostrar la contraseña
+function togglePasswordVisibility() {
+  const passwordField = document.getElementById('passwordField');
+  const toggleIcon = document.getElementById('toggleIcon');
+
+  if (passwordField.type === 'password') {
+    passwordField.type = 'text';
+    toggleIcon.classList.remove('fa-eye');
+    toggleIcon.classList.add('fa-eye-slash');
+  } else {
+    passwordField.type = 'password';
+    toggleIcon.classList.remove('fa-eye-slash');
+    toggleIcon.classList.add('fa-eye');
+  }
+}

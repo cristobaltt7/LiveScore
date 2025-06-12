@@ -1,3 +1,4 @@
+// Detecta cuando el usuario presiona "Enter" en el buscador del sidebar y redirige a la sección correspondiente según el término escrito
 document.addEventListener('DOMContentLoaded', function () {
   const input = document.getElementById('sidebarSearchInput');
   if (!input) return;

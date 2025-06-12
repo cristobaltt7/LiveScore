@@ -1,3 +1,4 @@
+// Cambia el tema del sitio entre claro y oscuro, y lo guarda en localStorage
 function toggleTheme(theme) {
   if (theme === 'light') {
     document.body.classList.add('light-mode');
@@ -8,6 +9,7 @@ function toggleTheme(theme) {
   }
 }
 
+// Al cargar la página, aplica el tema guardado y activa los botones de cambio de tema
 document.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('theme') || 'dark';
   toggleTheme(savedTheme);

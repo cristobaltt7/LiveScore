@@ -1,5 +1,7 @@
+// Controla la visibilidad de contraseñas, valida el formulario de registro y muestra errores personalizados si hay campos incorrectos
 document.addEventListener("DOMContentLoaded", function () {
-  // Show/hide password in register (all password fields)
+
+  // Activa el botón de mostrar/ocultar contraseña al hacer clic en el ícono del ojo
   document.querySelectorAll(".form-icon").forEach(function (icon) {
     icon.addEventListener("click", function () {
       const input = this.previousElementSibling;
@@ -18,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const form = document.querySelector("form");
   if (!form) return;
 
+  // Muestra un mensaje de error debajo del campo correspondiente
   function showError(input, message) {
     let error = input.nextElementSibling;
     if (!error || !error.classList.contains("error-message")) {
@@ -28,6 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
     error.textContent = message;
   }
 
+  // Elimina todos los mensajes de error del formulario
   function clearErrors(form) {
     form.querySelectorAll(".error-message").forEach(el => el.remove());
   }
@@ -42,24 +46,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const confirmInput = form.querySelector('input[name="password_confirmation"]');
 
     if (!nameInput.value.trim()) {
-      showError(nameInput, "Please enter your username.");
+      showError(nameInput, "Por favor, introduce tu correo.");
       nameInput.focus();
       valid = false;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailInput.value.trim() || !emailRegex.test(emailInput.value.trim())) {
-      showError(emailInput, "Please enter a valid email address.");
+      showError(emailInput, "Por favor, introduce una dirección de correo electrónico válida.");
       if (valid) emailInput.focus();
       valid = false;
     }
 
     if (!passwordInput.value) {
-      showError(passwordInput, "Please enter a password.");
+      showError(passwordInput, "Por favor, introduce tu contraseña.");
       if (valid) passwordInput.focus();
       valid = false;
     } else if (passwordInput.value.length < 8) {
-      showError(passwordInput, "Password must be at least 8 characters long.");
+      showError(passwordInput, "La contraseña debe tener al menos 8 caracteres.");
       if (valid) passwordInput.focus();
       valid = false;
     } else {
@@ -70,29 +74,29 @@ document.addEventListener("DOMContentLoaded", function () {
       const reSpecial = /[!@#$%^&*(),.?":{}|<>]/;
 
       if (!reUpper.test(password)) {
-        showError(passwordInput, "Password must contain at least one uppercase letter.");
+        showError(passwordInput, "La contraseña debe contener al menos una letra mayúscula.");
         if (valid) passwordInput.focus();
         valid = false;
       }
       if (!reLower.test(password)) {
-        showError(passwordInput, "Password must contain at least one lowercase letter.");
+        showError(passwordInput, "La contraseña debe contener al menos una letra minúscula.");
         if (valid) passwordInput.focus();
         valid = false;
       }
       if (!reNumber.test(password)) {
-        showError(passwordInput, "Password must contain at least one number.");
+        showError(passwordInput, "La contraseña debe contener al menos un número.");
         if (valid) passwordInput.focus();
         valid = false;
       }
       if (!reSpecial.test(password)) {
-        showError(passwordInput, "Password must contain at least one special character (e.g. !@#$%^&*).");
+        showError(passwordInput, "La contraseña debe contener al menos un carácter especial (por ejemplo, !@#$%^&*).");
         if (valid) passwordInput.focus();
         valid = false;
       }
     }
 
     if (confirmInput.value !== passwordInput.value) {
-      showError(confirmInput, "Passwords do not match.");
+      showError(confirmInput, "Las contraseñas no coinciden.");
       if (valid) confirmInput.focus();
       valid = false;
     }

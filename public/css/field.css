@@ -1,0 +1,59 @@
+/* Cuerpo de la página */
+body {
+    font-family: Arial, sans-serif;
+    background: #222;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+    color: #fff;
+}
+
+/* Título principal */
+h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+/* Campo de juego */
+.field {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 900px;
+    margin: 0 auto;
+    background: url('/images/football_field.jpg') no-repeat center center;
+    background-size: cover;
+    border: 2px solid #333;
+    border-radius: 10px;
+}
+
+/* Jugadores */
+.player {
+    position: absolute;
+    width: 100px;
+    height: 30px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    line-height: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #000;
+    cursor: default;
+    user-select: none;
+}
+
+/* Posiciones */
+.goalkeepers { top: 850px; left: 250px; }
+
+.defenders .player:nth-child(1) { top: 700px; left: 50px; }
+.defenders .player:nth-child(2) { top: 720px; left: 180px; }
+.defenders .player:nth-child(3) { top: 720px; left: 420px; }
+.defenders .player:nth-child(4) { top: 700px; left: 550px; }
+
+.midfielders .player:nth-child(1) { top: 500px; left: 100px; }
+.midfielders .player:nth-child(2) { top: 480px; left: 250px; }
+.midfielders .player:nth-child(3) { top: 500px; left: 400px; }
+
+.forwards .player:nth-child(1) { top: 250px; left: 100px; }
+.forwards .player:nth-child(2) { top: 230px; left: 300px; }
+.forwards .player:nth-child(3) { top: 250px; left: 500px; }
