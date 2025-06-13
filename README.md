@@ -1,6 +1,8 @@
 ## LiveScore
 
-LiveScore es una aplicación web que ofrece resultados deportivos de la Liga Española.
+**LiveScore** es una pagina web que ofrece resultados deportivos de la Liga Española, información de equipos españoles, goleadores y noticias actualizadas. 
+
+Ofrece una **funcionalidad innovadora** que permite al usuario **crear su propio once ideal** de cualquier equipo, seleccionando a los jugadores sobre un campo de fútbol en formación 4-3-3.
 
 ## APIs utilizadas
 
