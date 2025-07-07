@@ -14,10 +14,6 @@ LiveScore obtiene sus datos en tiempo real a través de tres APIs principales:
 
 - **[GNews](https://gnews.io/)**: API de noticias utilizada para mostrar artículos relacionados con el fútbol español. El plan gratuito permite 100 solicitudes al día.
 
-## Acceso a Figma
-
-[Figma](https://www.figma.com/design/yym0TdxzofW2Ft8fXk6dNF/LiveScore?node-id=0-1&t=U9TytzQgdXVJh8N2-1)
-
 ## Estructura de la base de datos
 
 <img src="img/bd.png">
